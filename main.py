@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import string
 import random
 import signal
 import time
@@ -14,6 +15,7 @@ if os.name == "posix":
         blue = "\033[34m"
         red = "\033[31m"
         endc = "\033[0m"
+
 else:
     class colors:
         white = ""
@@ -26,10 +28,10 @@ else:
 
 class PasswordGenerator:
     def __init__(self):
-        self.lower = "abcdefghijklmnopqrstuvwxyz"
-        self.upper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        self.lower = string.ascii_lowercase
+        self.upper = string.ascii_uppercase
         self.symbol = "(){}[]-&!?*%+:/#"
-        self.number = "0123456789"
+        self.number = string.digits
 
         self.all = self.lower + self.upper + self.number + self.symbol
 
@@ -41,13 +43,20 @@ class PasswordGenerator:
         else:
             self.rows, self.columns = 30, 100
 
-    def select_length(self):
+    def use_lang(self, en="", tr="") -> str:
         if self.lang == "EN":
-            length = input(
-                f"{colors.green}Enter password length (default: 8): {colors.gray}")
+            return en
         elif self.lang == "TR":
-            length = input(
-                f"{colors.green}Şifre uzunluğunu girin (varsayılan: 8): {colors.gray}")
+            return tr
+        else:
+            return ""
+
+    def select_length(self):
+        text = self.use_lang(
+            en = f"{colors.green}Enter password length (default: 8): {colors.gray}",
+            tr = f"{colors.green}Şifre uzunluğunu girin (varsayılan: 8): {colors.gray}",
+        )
+        length = input(text)
 
         if length is None or length == "":
             self.length = 8
@@ -55,11 +64,9 @@ class PasswordGenerator:
             self.length = int(length)
 
     def generate(self, length):
-        all_listed = list(
-            self.all)
+        all_listed = list(self.all)
 
-        random.shuffle(
-            all_listed)
+        random.shuffle(all_listed)
 
         password = random.choices(all_listed, k=length)
         password = "".join(password)
@@ -67,7 +74,7 @@ class PasswordGenerator:
         return password
 
     def main(self):
-        banner = ("""{}
+        banner = """{}
 ____                                     _
 |  _ \ __ _ ___ _____      _____  _ __ __| |
 | |_) / _` / __/ __\ \ /\ / / _ \| '__/ _` |{}
@@ -79,7 +86,9 @@ ____                                     _
 | |  _ / _ \ '_ \ / _ \ '__/ _` | __/ _ \| '__|{}
 | |_| |  __/ | | |  __/ | | (_| | || (_) | |
  \____|\___|_| |_|\___|_|  \__,_|\__\___/|_|
-        {}""".format(colors.blue, colors.red, colors.blue, colors.green, colors.endc))
+        {}""".format(
+            colors.blue, colors.red, colors.blue, colors.green, colors.endc
+        )
 
         print(banner)
 
@@ -98,11 +107,12 @@ ____                                     _
         self.select_length()
 
         if int(self.length) < 8:
-            if self.lang == "EN":
-                print(
-                    f"{colors.red}Password length cannot be lower than 8 characters!")
-            elif self.lang == "TR":
-                print(f"{colors.red}Şifre 8 uzunluğu karakterden az olamaz!")
+            print(
+                self.use_lang(
+                    en=f"{colors.red}Password length cannot be lower than 8 characters!",
+                    tr=f"{colors.red}Şifre 8 uzunluğu karakterden az olamaz!",
+                )
+            )
 
             self.select_length()
 
@@ -110,12 +120,12 @@ ____                                     _
 
         time.sleep(1)
 
-        if self.lang == "EN":
-            print(
-                f"{colors.green}Your generated password is: {colors.gray}{password}{colors.endc}")
-        elif self.lang == "TR":
-            print(
-                f"{colors.green}Oluşturulan şifreniz: {colors.gray}{password}{colors.endc}")
+        print(
+            self.use_lang(
+                en=f"{colors.green}Your generated password is: {colors.gray}{password}{colors.endc}",
+                tr=f"{colors.green}Oluşturulan şifreniz: {colors.gray}{password}{colors.endc}",
+            )
+        )
 
         sys.exit(0)
 
