@@ -1,5 +1,7 @@
-<h1 align="center">password_generator</h1>
-<h2 align="center">Simple cli utility for generating passwords</h2>
+<div align="center">
+    <h1>password_generator</h1>
+    <h2>Simple cli utility for generating passwords</h2>
+</div>
 
 <div align="center">
   <img alt="Stargazers" src="https://img.shields.io/github/stars/budchirp/password_generator?style=for-the-badge&colorA=0b1221&colorB=ff8e8e" />
