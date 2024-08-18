@@ -1,6 +1,6 @@
 <div align="center">
     <h1>password_generator</h1>
-    <h2>Simple cli utility for generating passwords</h2>
+    <h2>Simple CLI utility for generating random passwords</h2>
 </div>
 
 <div align="center">
